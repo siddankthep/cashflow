@@ -1,4 +1,4 @@
-package com.example.cashflow.dto;
+package com.example.cashflow.authentication.dto;
 
 import lombok.Getter;
 import lombok.Setter;

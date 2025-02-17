@@ -1,4 +1,4 @@
-package com.example.cashflow.services;
+package com.example.cashflow.authentication.services;
 
 import java.security.Key;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class JwtService {
     public String generateToken(HashMap<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails);
     }
-    
+
     public long getExpirationTime() {
         return expirationTime;
     }

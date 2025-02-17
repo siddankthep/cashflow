@@ -1,4 +1,4 @@
-package com.example.cashflow.responses;
+package com.example.cashflow.authentication.responses;
 
 import lombok.Getter;
 import lombok.Setter;

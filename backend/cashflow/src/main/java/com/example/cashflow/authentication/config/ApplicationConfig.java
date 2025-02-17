@@ -1,4 +1,4 @@
-package com.example.cashflow.config;
+package com.example.cashflow.authentication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.cashflow.repositories.UserRepository;
+import com.example.cashflow.authentication.repositories.UserRepository;
 
 @Configuration
 public class ApplicationConfig {

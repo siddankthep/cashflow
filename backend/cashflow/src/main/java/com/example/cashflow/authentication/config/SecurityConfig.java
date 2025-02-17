@@ -1,4 +1,4 @@
-package com.example.cashflow.config;
+package com.example.cashflow.authentication.config;
 
 import java.util.List;
 
@@ -32,11 +32,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
-                        authorize -> authorize.
-                        requestMatchers("/auth/**").
-                        permitAll().
-                        anyRequest().
-                        authenticated())
+                        authorize -> authorize.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -46,7 +42,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://example.com", "http://localhost:8080")); // TODO: Update allowed origins
+        configuration.setAllowedOrigins(List.of("https://example.com", "http://localhost:8080")); // TODO: Update
+                                                                                                  // allowed origins
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -1,11 +1,11 @@
-package com.example.cashflow.services;
+package com.example.cashflow.authentication.services;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
+import com.example.cashflow.authentication.repositories.UserRepository;
 import com.example.cashflow.entities.User;
-import com.example.cashflow.repositories.UserRepository;
 
 @Service
 public class UserService {

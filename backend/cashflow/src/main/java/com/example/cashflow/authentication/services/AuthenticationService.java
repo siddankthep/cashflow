@@ -1,14 +1,14 @@
-package com.example.cashflow.services;
+package com.example.cashflow.authentication.services;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.cashflow.dto.LoginUserDTO;
-import com.example.cashflow.dto.RegisterUserDTO;
+import com.example.cashflow.authentication.dto.LoginUserDTO;
+import com.example.cashflow.authentication.dto.RegisterUserDTO;
+import com.example.cashflow.authentication.repositories.UserRepository;
 import com.example.cashflow.entities.User;
-import com.example.cashflow.repositories.UserRepository;
 
 @Service
 public class AuthenticationService {
@@ -46,5 +46,4 @@ public class AuthenticationService {
         return user;
     }
 
-    
 }

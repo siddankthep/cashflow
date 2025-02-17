@@ -1,4 +1,4 @@
-package com.example.cashflow.controllers;
+package com.example.cashflow.authentication.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.cashflow.dto.LoginUserDTO;
-import com.example.cashflow.dto.RegisterUserDTO;
+import com.example.cashflow.authentication.dto.LoginUserDTO;
+import com.example.cashflow.authentication.dto.RegisterUserDTO;
+import com.example.cashflow.authentication.responses.LoginResponse;
+import com.example.cashflow.authentication.services.AuthenticationService;
+import com.example.cashflow.authentication.services.JwtService;
 import com.example.cashflow.entities.User;
-import com.example.cashflow.responses.LoginResponse;
-import com.example.cashflow.services.AuthenticationService;
-import com.example.cashflow.services.JwtService;
 
 @RequestMapping("/auth")
 @RestController

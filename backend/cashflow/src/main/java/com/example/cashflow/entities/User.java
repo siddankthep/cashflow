@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 100)
     private String lastName;
 
-    @Column(length = 3, nullable = false)
+    @Column(length = 3)
     private String preferredCurrency = "VND";
 
     @CreationTimestamp

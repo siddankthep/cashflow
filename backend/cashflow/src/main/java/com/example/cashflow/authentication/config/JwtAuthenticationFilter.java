@@ -1,4 +1,4 @@
-package com.example.cashflow.config;
+package com.example.cashflow.authentication.config;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.example.cashflow.services.JwtService;
+import com.example.cashflow.authentication.services.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
