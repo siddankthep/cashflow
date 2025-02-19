@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cashflow.authentication.dto.LoginUserDTO;
 import com.example.cashflow.authentication.dto.RegisterUserDTO;
 import com.example.cashflow.authentication.responses.LoginResponse;
+import com.example.cashflow.authentication.responses.RegisterResponse;
 import com.example.cashflow.authentication.services.AuthenticationService;
 import com.example.cashflow.authentication.services.JwtService;
 import com.example.cashflow.entities.User;
@@ -25,9 +26,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody RegisterUserDTO input) {
+    public ResponseEntity<RegisterResponse> signup(@RequestBody RegisterUserDTO input) {
         User registeredUser = authenticationService.signup(input);
-        return ResponseEntity.ok(registeredUser);
+        RegisterResponse registerResponse = new RegisterResponse(registeredUser.getId(), registeredUser.getEmail(),
+                registeredUser.getUsername(), registeredUser.getFirstName(), registeredUser.getLastName());
+        return ResponseEntity.ok(registerResponse);
     }
 
     @PostMapping("/login")

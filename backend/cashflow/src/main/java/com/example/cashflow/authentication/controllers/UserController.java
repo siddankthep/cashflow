@@ -1,7 +1,5 @@
 package com.example.cashflow.authentication.controllers;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,9 +26,4 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<User>> allUsers() {
-        List<User> allUsers = userService.getAllUsers();
-        return ResponseEntity.ok(allUsers);
-    }
 }
