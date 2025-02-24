@@ -21,6 +21,8 @@ class User {
     required this.updatedAt,
   });
 
+  String get getCurrency => preferredCurrency;
+
   /// Creates a [User] instance from a JSON map.
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -49,5 +51,10 @@ class User {
       "createdAt": createdAt.toIso8601String(),
       "updatedAt": updatedAt.toIso8601String(),
     };
+  }
+
+  @override
+  String toString() {
+    return "User: {id: $id, email: $email, username: $username, firstName: $firstName, lastName: $lastName, preferredCurrency: $preferredCurrency}";
   }
 }

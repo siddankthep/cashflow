@@ -28,27 +28,25 @@ public class OCRController {
     }
 
     @PostMapping("/scan")
-    public ResponseEntity<Transaction> uploadImage(@RequestParam("image") MultipartFile image) {
+    public ResponseEntity<TransactionResponse> uploadImage(@RequestParam("image") MultipartFile image) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         try {
             Transaction newTransaction = ocrService.processReceipt(image, user.getId());
-            return ResponseEntity.ok(newTransaction);
+            TransactionResponse response = new TransactionResponse(
+                    newTransaction.getId(),
+                    newTransaction.getUser().getId(),
+                    newTransaction.getCategory(),
+                    newTransaction.getSubtotal(),
+                    newTransaction.getDescription(),
+                    newTransaction.getTransactionDate(),
+                    newTransaction.getPaymentMethod(),
+                    newTransaction.getLocation());
+            return ResponseEntity.ok(response);
 
         } catch (IOException | TesseractException | RestClientException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    @PostMapping("/save")
-    public ResponseEntity<TransactionResponse> saveTransaction(@RequestBody Transaction transaction) {
-        Transaction newTransaction = ocrService.saveTransaction(transaction);
-        TransactionResponse transactionResponse = new TransactionResponse(newTransaction.getId(),
-                newTransaction.getUser().getId(), newTransaction.getCategory().getId(),
-                newTransaction.getSubtotal(),
-                newTransaction.getDescription(), newTransaction.getTransactionDate(),
-                newTransaction.getPaymentMethod(), newTransaction.getLocation());
-        return ResponseEntity.ok(transactionResponse);
     }
 }

@@ -41,10 +41,6 @@ public class OCRService {
         this.userRepository = userRepository;
     }
 
-    public Transaction saveTransaction(Transaction transaction) {
-        return transactionRepository.save(transaction);
-    }
-
     public Transaction processReceipt(MultipartFile image, UUID userId)
             throws IOException, TesseractException, RestClientException {
 
@@ -67,8 +63,24 @@ public class OCRService {
         String paymentMethod = metadata.get("paymentMethod").asText();
         String location = metadata.get("location").asText();
 
-        Transaction transaction = new Transaction(user, category, subtotal, description, date, paymentMethod,
+        // TransactionResponse response = new TransactionResponse(
+        // userId,
+        // category,
+        // subtotal,
+        // description,
+        // date,
+        // paymentMethod,
+        // location);
+        Transaction transaction = new Transaction(
+                user,
+                category,
+                subtotal,
+                description,
+                date,
+                paymentMethod,
                 location);
+
+        // return response;
         return transaction;
     }
 

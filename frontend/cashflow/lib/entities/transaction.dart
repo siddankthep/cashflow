@@ -26,6 +26,17 @@ class Transaction {
     required this.updatedAt,
   });
 
+  String get getId => id;
+  User get getUser => user;
+  Category? get getCategory => category;
+  double get getSubtotal => subtotal;
+  String? get getDescription => description;
+  DateTime get getTransactionDate => transactionDate;
+  String? get getPaymentMethod => paymentMethod;
+  String? get getLocation => location;
+  DateTime get getCreatedAt => createdAt;
+  DateTime get getUpdatedAt => updatedAt;
+
   /// Creates a Transaction instance from a JSON map.
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(

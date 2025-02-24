@@ -15,7 +15,7 @@ import com.example.cashflow.entities.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @NonNull
-    Optional<Category> findById(@NonNull UUID categoryId);
+    Optional<Category> findById(@NonNull UUID id);
 
     @Query("SELECT c FROM Category c WHERE c.user.id = :userId OR c.user.id IS NULL")
     Optional<List<Category>> findAllByUserId(@Param("userId") UUID userId);

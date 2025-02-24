@@ -1,21 +1,15 @@
-package com.example.cashflow.ocr.responses;
+package com.example.cashflow.ocr.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
-
 import com.example.cashflow.entities.Category;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class TransactionResponse {
-    private UUID id;
-    private UUID userId;
+public class TransactionDTO {
     private Category category;
     private BigDecimal subtotal;
     private String description;

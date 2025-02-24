@@ -142,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             print("Login failed: $error");
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${error.toString()}'),
+                                content: Text(error.toString()),
                                 backgroundColor: Colors.red,
                               ),
                             );
