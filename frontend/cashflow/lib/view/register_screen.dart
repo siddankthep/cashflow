@@ -1,4 +1,4 @@
-import 'package:cashflow/model/auth_service.dart';
+import 'package:cashflow/controller/auth_controller.dart';
 import 'package:cashflow/view/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,51 +8,12 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
   String _username = '';
   String _email = '';
   String _password = '';
   String _firstName = '';
   String _lastName = '';
-  AuthenticationService _authService = AuthenticationService();
-
-  // Handle registration submission
-  void _register() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      print("Username: $_username");
-      print("Email: $_email");
-      print("Password: $_password");
-      try {
-        _authService
-            .register(_firstName, _lastName, _email, _username, _password)
-            .then((_) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LoginScreen()));
-        }).catchError((error) {
-          // Catch any errors here
-          print("Registration failed: $error");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to create user: ${error.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        });
-      } catch (e) {
-        print(e);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to create user: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
-
-      // Add your registration logic here
-    }
-  }
+  AuthController _authController = AuthController();
 
   bool _isEmailValid(String email) {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
@@ -70,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: SizedBox(
             width: 400,
             child: Form(
-              key: _formKey,
+              key: _authController.formKey,
               child: Column(
                 children: [
                   // First Name Field
@@ -158,7 +119,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: _register,
+                      onPressed: () {
+                        if (_authController.formKey.currentState!.validate()) {
+                          _authController.formKey.currentState!
+                              .save(); // Save the form FIRST
+
+                          _authController
+                              .register(context, _username, _email, _password,
+                                  _firstName, _lastName)
+                              .then((success) {
+                            if (success) {
+                              // Navigate on successful login
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ),
+                              );
+                            }
+                          }).catchError((error) {
+                            // Handle login errors here, e.g., show a snackbar
+                            print("Login failed: $error");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${error.toString()}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          });
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50),
                       ),
