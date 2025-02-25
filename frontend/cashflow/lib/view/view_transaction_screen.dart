@@ -1,5 +1,5 @@
-import 'package:cashflow/model/auth_provider.dart';
-import 'package:cashflow/model/transaction_service.dart';
+import 'package:cashflow/model/providers/auth_provider.dart';
+import 'package:cashflow/model/services/transaction_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

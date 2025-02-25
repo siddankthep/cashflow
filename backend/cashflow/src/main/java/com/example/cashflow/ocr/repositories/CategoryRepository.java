@@ -18,7 +18,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Optional<Category> findById(@NonNull UUID id);
 
     @Query("SELECT c FROM Category c WHERE c.user.id = :userId OR c.user.id IS NULL")
-    Optional<List<Category>> findAllByUserId(@Param("userId") UUID userId);
+    List<Category> findAllByUserId(@Param("userId") UUID userId);
 
     Optional<Category> findByUserId(UUID userId);
 

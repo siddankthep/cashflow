@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cashflow/entities/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:cashflow/model/auth_provider.dart';
+import 'package:cashflow/model/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 

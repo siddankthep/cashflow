@@ -1,6 +1,9 @@
-import 'package:cashflow/model/user_service.dart';
+import 'package:cashflow/model/providers/camera_provider.dart';
+import 'package:cashflow/model/services/user_service.dart';
+import 'package:cashflow/view/scan_receipt_screen.dart';
 import 'package:cashflow/view/view_transaction_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,24 +15,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final firstCamera =
+        Provider.of<CameraProvider>(context, listen: false).firstCamera;
     return Scaffold(
       appBar: AppBar(
         title: Text('Cashflow'),
       ),
       body: Center(
-          child: Row(
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              fixedSize: Size(150, 100),
+              fixedSize: Size(200, 150),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
             onPressed: () {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => Placeholder()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ScanReceiptScreen(camera: firstCamera!)));
               print('Scanning receipt');
             },
             // child: Text('Scan Receipt', textAlign: TextAlign.center),
@@ -39,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "Scan Receipt",
                   textAlign: TextAlign.center,
-                  textScaler: TextScaler.linear(0.8),
+                  textScaler: TextScaler.linear(1),
                 ),
                 SizedBox(
                   height: 10,
@@ -51,10 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(
             width: 20,
+            height: 20,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              fixedSize: Size(150, 100),
+              fixedSize: Size(200, 150),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -73,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "View Transactions",
                   textAlign: TextAlign.center,
-                  textScaler: TextScaler.linear(0.8),
+                  textScaler: TextScaler.linear(1),
                 ),
                 SizedBox(
                   height: 10,

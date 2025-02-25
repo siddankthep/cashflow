@@ -1,11 +1,7 @@
 import 'package:cashflow/controller/auth_controller.dart';
-import 'package:cashflow/entities/user.dart';
-import 'package:cashflow/model/user_service.dart';
 import 'package:cashflow/view/home_screen.dart';
 import 'package:cashflow/view/register_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cashflow/model/auth_provider.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,13 +10,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthController _authController = AuthController();
-  final UserService _userService = UserService();
+  // final UserService _userService = UserService();
   String _username = '';
   String _password = '';
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    // final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -81,11 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               .login(context, _username, _password)
                               .then((_) {
                             // Navigate on successful login
-                            Navigator.push(
-                              context,
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
-                              ),
+                                  builder: (context) => HomeScreen()),
+                              (Route<dynamic> route) => false,
                             );
                           }).catchError((error) {
                             // Handle login errors here, e.g., show a snackbar

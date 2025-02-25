@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.cashflow.entities.Category;
 import com.example.cashflow.entities.Transaction;
 import com.example.cashflow.entities.User;
 import com.example.cashflow.ocr.dto.TransactionDTO;
@@ -45,7 +46,7 @@ public class TransactionController {
             TransactionResponse transactionResponse = new TransactionResponse(
                     newTransaction.getId(),
                     newTransaction.getUser().getId(),
-                    newTransaction.getCategory(),
+                    input.getCategory(),
                     newTransaction.getSubtotal(),
                     newTransaction.getDescription(),
                     newTransaction.getTransactionDate(),

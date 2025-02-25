@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.example.cashflow.entities.Category;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +14,7 @@ import lombok.Setter;
 public class TransactionResponse {
     private UUID id;
     private UUID userId;
-    private Category category;
+    private CategoryResponse category;
     private BigDecimal subtotal;
     private String description;
     private LocalDate transactionDate;

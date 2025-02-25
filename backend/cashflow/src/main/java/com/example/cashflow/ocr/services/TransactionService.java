@@ -12,6 +12,7 @@ import com.example.cashflow.entities.User;
 import com.example.cashflow.ocr.dto.TransactionDTO;
 import com.example.cashflow.ocr.repositories.CategoryRepository;
 import com.example.cashflow.ocr.repositories.TransactionRepository;
+import com.example.cashflow.ocr.responses.CategoryResponse;
 
 @Service
 public class TransactionService {
@@ -37,7 +38,9 @@ public class TransactionService {
     }
 
     public Transaction saveTransaction(TransactionDTO input, User user) {
-        Category category = input.getCategory();
+        CategoryResponse categoryResponse = input.getCategory();
+        Category category = categoryRepository.findByName(categoryResponse.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
         Transaction newTransaction = new Transaction(
                 user,
                 category,

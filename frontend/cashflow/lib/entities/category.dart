@@ -1,20 +1,14 @@
-import 'user.dart';
-
 class Category {
   final String id;
-  final User? user; // Now nullable
   final String name;
   final String? icon;
   final String? color;
-  final DateTime createdAt;
 
   Category({
     required this.id,
-    this.user,
     required this.name,
     this.icon,
     this.color,
-    required this.createdAt,
   });
 
   /// Creates a Category instance from a JSON map.
@@ -22,11 +16,9 @@ class Category {
     return Category(
       id: json['id'] as String,
       // Check if 'user' is null before trying to parse it.
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
       name: json['name'] as String,
       icon: json['icon'] as String?,
       color: json['color'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
 
@@ -34,11 +26,14 @@ class Category {
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "user": user?.toJson(), // Use null-aware operator
       "name": name,
       "icon": icon,
       "color": color,
-      "createdAt": createdAt.toIso8601String(),
     };
+  }
+
+  @override
+  String toString() {
+    return 'Category{id: $id, name: $name, icon: $icon, color: $color}';
   }
 }

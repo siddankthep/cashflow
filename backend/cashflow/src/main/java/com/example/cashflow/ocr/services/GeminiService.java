@@ -123,9 +123,9 @@ public class GeminiService {
   }
 
   private String formatCategorizePrompt(UUID userId) {
-    Optional<List<Category>> categories = categoryRepository.findAllByUserId(userId);
+    List<Category> categories = categoryRepository.findAllByUserId(userId);
 
-    List<String> categoryJsonObjects = categories.orElseThrow(() -> new RuntimeException("Categories not found"))
+    List<String> categoryJsonObjects = categories
         .stream()
         .map(category -> String.format("{\"id\": \"%s\", \"name\": \"%s\"}", category.getId(), category.getName()))
         .toList();

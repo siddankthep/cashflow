@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.cashflow.entities.Transaction;
 import com.example.cashflow.entities.User;
+import com.example.cashflow.ocr.responses.CategoryResponse;
 import com.example.cashflow.ocr.responses.TransactionResponse;
 import com.example.cashflow.ocr.services.OCRService;
 
@@ -33,10 +34,15 @@ public class OCRController {
         User user = (User) authentication.getPrincipal();
         try {
             Transaction newTransaction = ocrService.processReceipt(image, user.getId());
+            CategoryResponse categoryResponse = new CategoryResponse(
+                    newTransaction.getCategory().getId(),
+                    newTransaction.getCategory().getName(),
+                    newTransaction.getCategory().getIcon(),
+                    newTransaction.getCategory().getColor());
             TransactionResponse response = new TransactionResponse(
                     newTransaction.getId(),
                     newTransaction.getUser().getId(),
-                    newTransaction.getCategory(),
+                    categoryResponse,
                     newTransaction.getSubtotal(),
                     newTransaction.getDescription(),
                     newTransaction.getTransactionDate(),

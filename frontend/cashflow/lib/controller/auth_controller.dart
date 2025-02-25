@@ -1,7 +1,7 @@
 import 'package:cashflow/entities/user.dart';
-import 'package:cashflow/model/auth_service.dart';
-import 'package:cashflow/model/auth_provider.dart';
-import 'package:cashflow/model/user_service.dart';
+import 'package:cashflow/model/services/auth_service.dart';
+import 'package:cashflow/model/providers/auth_provider.dart';
+import 'package:cashflow/model/services/user_service.dart';
 import 'package:cashflow/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class AuthController {
 
   // Handle login submission
   Future<void> login(context, String username, String password) async {
-    AuthProvider _authProvider =
+    AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     try {
       print("Email: $username");
@@ -22,8 +22,8 @@ class AuthController {
       print("Token: $token");
       User user = await _userService.getUser(context, token);
       print("User: ${user.toString()}");
-      _authProvider.setUser(user);
-      _authProvider.setToken(token);
+      authProvider.setUser(user);
+      authProvider.setToken(token);
       return;
     } catch (error) {
       // Catch any errors here
