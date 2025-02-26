@@ -1,9 +1,8 @@
+import 'package:cashflow/controller/new_transaction_controller.dart';
 import 'package:cashflow/entities/category.dart';
 import 'package:cashflow/entities/transaction.dart';
 import 'package:cashflow/entities/user.dart';
 import 'package:cashflow/model/providers/auth_provider.dart';
-import 'package:cashflow/model/services/category_service.dart';
-import 'package:cashflow/model/services/transaction_service.dart';
 import 'package:cashflow/view/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +21,8 @@ class NewTransactionScreen extends StatefulWidget {
 
 class _NewTransactionScreenState extends State<NewTransactionScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TransactionService _transactionService = TransactionService();
+
+  // Text controllers for user input
   final _subtotalController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _paymentMethodController = TextEditingController();
@@ -33,12 +33,15 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
   User? _user;
   String? _token;
 
-  // Example static categories. In a real app, you might fetch these from an API.
+  // Instantiate the controller.
+  late NewTransactionController _controller;
 
   @override
   void initState() {
     super.initState();
-    // If a Transaction object is provided, prepopulate the form fields.
+    _controller = NewTransactionController();
+
+    // Prepopulate fields if a scanned transaction is provided.
     if (widget.scannedTransaction != null) {
       _subtotalController.text = widget.scannedTransaction!.subtotal.toString();
       _descriptionController.text =
@@ -50,23 +53,6 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
     }
   }
 
-  Category? getCategoryFromDropDown(List<Category> categories) {
-    if (_selectedCategory == null &&
-        widget.scannedTransaction?.category != null) {
-      final Category scannedCat = widget.scannedTransaction!.category!;
-      print('Scanned Category: ${scannedCat.toString()}');
-      final index = categories.indexWhere((c) => c.name == scannedCat.name);
-      print('Index of category: $index');
-      if (index != -1) {
-        return categories[index];
-      } else {
-        categories.add(scannedCat);
-      }
-      return scannedCat;
-    }
-    return null;
-  }
-
   @override
   void dispose() {
     _subtotalController.dispose();
@@ -76,6 +62,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
     super.dispose();
   }
 
+  /// Opens a date picker and sets the selected date.
   Future<void> _selectDate(BuildContext context) async {
     final now = DateTime.now();
     final pickedDate = await showDatePicker(
@@ -91,9 +78,9 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
     }
   }
 
-  void _saveTransaction() {
+  /// Gathers the data from the form and delegates the save operation to the controller.
+  void _saveTransaction() async {
     if (_formKey.currentState!.validate() && _selectedDate != null) {
-      // Create a new Transaction. Note that we leave the id empty (to be generated later).
       final transaction = Transaction(
         id: '',
         userId: _user!.id,
@@ -105,18 +92,13 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
         location: _locationController.text,
       );
 
-      // For now, simply print the JSON representation.
-      print('New Transaction: ${transaction.toJson()}');
       try {
-        _transactionService.saveTransaction(_token, transaction);
-        // Navigate back to HomeScreen after successful save
+        await _controller.saveTransaction(_token, transaction);
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => HomeScreen()),
           (Route<dynamic> route) => false,
         );
       } catch (e) {
-        // Handle error during save
-        print('Error saving transaction: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error saving transaction: $e')),
         );
@@ -130,9 +112,11 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the authenticated user and token from the AuthProvider.
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     _user = authProvider.user;
     _token = authProvider.jwtToken;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Transaction'),
@@ -199,9 +183,9 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                   decoration: const InputDecoration(labelText: 'Location'),
                 ),
                 const SizedBox(height: 16.0),
-                // Category Dropdown
+                // Category Dropdown loaded via the controller.
                 FutureBuilder<List<Category>>(
-                  future: CategoryService().getAllCategories(_token),
+                  future: _controller.fetchCategories(_token),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -212,11 +196,11 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                       );
                     } else {
                       final categories = snapshot.data ?? [];
-
-                      // If there's a scanned transaction and _selectedCategory is null,
-                      // find the matching instance from the fetched categories.
-                      _selectedCategory = getCategoryFromDropDown(categories);
-
+                      _selectedCategory = _controller.getCategoryFromDropDown(
+                        categories: categories,
+                        selectedCategory: _selectedCategory,
+                        scannedTransaction: widget.scannedTransaction,
+                      );
                       return DropdownButtonFormField<Category>(
                         decoration:
                             const InputDecoration(labelText: 'Category'),
@@ -228,9 +212,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                         }).toList(),
                         onChanged: (Category? newValue) {
                           setState(() {
-                            print('Selected Category: $newValue');
-                            _selectedCategory =
-                                getCategoryFromDropDown(categories);
+                            _selectedCategory = newValue;
                           });
                         },
                         value: _selectedCategory,

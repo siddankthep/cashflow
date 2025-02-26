@@ -1,13 +1,10 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'package:camera/camera.dart';
+import 'package:cashflow/controller/scan_receipt_controller.dart';
 import 'package:cashflow/entities/transaction.dart';
 import 'package:cashflow/model/providers/auth_provider.dart';
-import 'package:cashflow/model/services/ocr_service.dart';
 import 'package:cashflow/view/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ScanReceiptScreen extends StatefulWidget {
@@ -22,73 +19,70 @@ class ScanReceiptScreen extends StatefulWidget {
 class ScanReceiptScreenState extends State<ScanReceiptScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
-
-  final ImagePicker _picker = ImagePicker();
   late String? _token;
+
+  // Instantiate the controller.
+  late ScanReceiptController _scanController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the CameraController with the given camera and resolution.
     _controller = CameraController(
       widget.camera,
       ResolutionPreset.medium,
     );
-
-    // Initialize the controller and store the Future.
     _initializeControllerFuture = _controller.initialize();
+    _scanController = ScanReceiptController();
   }
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();
   }
 
+  /// Uses the controller to capture an image and then navigates to the display screen.
   Future<void> _takePicture() async {
     try {
       await _initializeControllerFuture;
-      final image = await _controller.takePicture();
-
-      if (!mounted) return;
-
-      // Navigate to the DisplayPictureScreen to display the captured image.
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DisplayPictureScreen(imagePath: image.path),
-        ),
-      );
+      final imagePath = await _scanController.captureImage(_controller);
+      if (imagePath != null && mounted) {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => DisplayPictureScreen(imagePath: imagePath),
+          ),
+        );
+      }
     } catch (e) {
       print('Error taking picture: $e');
     }
   }
 
+  /// Uses the controller to pick an image, scan it via OCR, and then navigate to the add transaction screen.
   Future<void> _pickImage() async {
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        Transaction transaction =
-            await OCRService().scanReceipt(image.path, _token!);
-        // Navigate to the DisplayPictureScreen to display the selected image.
+      Transaction? transaction = await _scanController.scanImage(_token!);
+      if (transaction != null) {
         await Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => NewTransactionScreen(
-              scannedTransaction: transaction,
-            ),
+            builder: (context) =>
+                NewTransactionScreen(scannedTransaction: transaction),
           ),
         );
+      } else {
+        throw Exception('Failed to scan receipt.');
       }
     } catch (e) {
       print('Error picking image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(
-                'An error occured while scanning the receipt, please enter the content manually')),
+          content: Text(
+              'An error occurred while scanning the receipt, please enter the content manually'),
+        ),
       );
       await Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => NewTransactionScreen(),
+          builder: (context) => const NewTransactionScreen(),
         ),
       );
     }
@@ -118,7 +112,7 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
                     child: CameraPreview(_controller),
                   ),
                 ),
-                // Two buttons: one for taking a picture and one for picking from the library.
+                // Two buttons: one for taking a picture and one for picking from the gallery.
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
@@ -140,7 +134,6 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
               ],
             );
           } else {
-            // If the controller is still initializing, show a loading indicator.
             return const Center(child: CircularProgressIndicator());
           }
         },
@@ -149,7 +142,7 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
   }
 }
 
-// A widget that displays the picture taken or selected by the user.
+/// A simple view to display the captured image.
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
