@@ -1,4 +1,4 @@
-package com.example.cashflow.ocr.dto;
+package com.example.cashflow.ocr.dto.gemini;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.example.cashflow.ocr.dto;
+package com.example.cashflow.ocr.dto.gemini;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

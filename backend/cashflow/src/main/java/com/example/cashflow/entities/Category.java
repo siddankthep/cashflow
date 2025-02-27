@@ -1,6 +1,9 @@
 package com.example.cashflow.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -11,6 +14,8 @@ import java.util.UUID;
 @Table(name = "categories", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "user_id", "name" })
 })
+@Getter
+@Setter
 public class Category {
 
     @Id
@@ -25,11 +30,11 @@ public class Category {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(length = 50)
+    @Column(nullable = false, length = 8)
     private String icon;
 
-    @Column(length = 7)
-    private String color;
+    @Column(nullable = false)
+    private Long color;
 
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
@@ -39,59 +44,11 @@ public class Category {
     public Category() {
     }
 
-    public Category(User user, String name, String icon, String color) {
+    public Category(User user, String name, String icon, Long color) {
         this.user = user;
         this.name = name;
         this.icon = icon;
         this.color = color;
     }
 
-    // Getters and Setters
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
 }

@@ -3,8 +3,8 @@ CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES users(id),
     name VARCHAR(50) NOT NULL,
-    icon VARCHAR(50),
-    color VARCHAR(7),
+    icon VARCHAR(10) NOT NULL,
+    color BIGINT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, name)
 );

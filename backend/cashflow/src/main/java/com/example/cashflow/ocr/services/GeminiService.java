@@ -12,6 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.cashflow.entities.Category;
 import com.example.cashflow.ocr.dto.*;
+import com.example.cashflow.ocr.dto.gemini.Content;
+import com.example.cashflow.ocr.dto.gemini.GeminiGenerateContentRequest;
+import com.example.cashflow.ocr.dto.gemini.GeminiGenerateContentResponse;
+import com.example.cashflow.ocr.dto.gemini.GenerationConfig;
+import com.example.cashflow.ocr.dto.gemini.Part;
 import com.example.cashflow.ocr.repositories.CategoryRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

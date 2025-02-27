@@ -1,18 +1,16 @@
-package com.example.cashflow.ocr.responses;
-
-import java.util.UUID;
+package com.example.cashflow.ocr.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class CategoryResponse {
-    private UUID id;
+@NoArgsConstructor
+public class CategoryDTO {
     private String name;
     private String icon;
-    private Long color;
-
+    private Long colorCode;
 }
