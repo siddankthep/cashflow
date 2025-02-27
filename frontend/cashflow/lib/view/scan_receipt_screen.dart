@@ -20,6 +20,7 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late String? _token;
+  bool _isScanning = false;
 
   // Instantiate the controller.
   late ScanReceiptController _scanController;
@@ -43,23 +44,39 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
 
   /// Uses the controller to capture an image and then navigates to the display screen.
   Future<void> _takePicture() async {
+    setState(() {
+      _isScanning = true; // Start showing the progress indicator
+    });
     try {
       await _initializeControllerFuture;
-      final imagePath = await _scanController.captureImage(_controller);
-      if (imagePath != null && mounted) {
+      Transaction? transaction =
+          await _scanController.captureImage(_controller, _token!);
+      if (mounted) {
         await Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => DisplayPictureScreen(imagePath: imagePath),
+            builder: (context) =>
+                NewTransactionScreen(scannedTransaction: transaction),
           ),
         );
       }
     } catch (e) {
-      print('Error taking picture: $e');
+      print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred while scanning the receipt'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isScanning = false; // Stop showing the progress indicator
+      });
     }
   }
 
-  /// Uses the controller to pick an image, scan it via OCR, and then navigate to the add transaction screen.
   Future<void> _pickImage() async {
+    setState(() {
+      _isScanning = true; // Start showing the progress indicator
+    });
     try {
       Transaction? transaction = await _scanController.scanImage(_token!);
       if (transaction != null) {
@@ -69,22 +86,18 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
                 NewTransactionScreen(scannedTransaction: transaction),
           ),
         );
-      } else {
-        throw Exception('Failed to scan receipt.');
       }
     } catch (e) {
       print('Error picking image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              'An error occurred while scanning the receipt, please enter the content manually'),
+          content: Text('An error occurred while scanning the receipt'),
         ),
       );
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const NewTransactionScreen(),
-        ),
-      );
+    } finally {
+      setState(() {
+        _isScanning = false; // Stop showing the progress indicator
+      });
     }
   }
 
@@ -95,48 +108,62 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Scan Receipt')),
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: [
-                // Container for the camera preview.
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20.0),
+      body: Stack(
+        children: [
+          FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Column(
+                  children: [
+                    Expanded(
+                      child: CameraPreview(_controller),
                     ),
-                    width: double.infinity,
-                    child: CameraPreview(_controller),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: _takePicture,
+                            icon: const Icon(Icons.camera_alt),
+                            label: const Text('Take Photo'),
+                          ),
+                          ElevatedButton.icon(
+                            // Disable the button while scanning
+                            onPressed: _isScanning ? null : _pickImage,
+                            icon: const Icon(Icons.photo_library),
+                            label: const Text('Select from Library'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+          // Overlay loading indicator when scanning
+          if (_isScanning)
+            Container(
+              color: Colors.black54, // Semi-transparent background
+              child: const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(color: Colors.white),
+                    SizedBox(height: 16),
+                    Text(
+                      'Scanning receipt...',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
-                // Two buttons: one for taking a picture and one for picking from the gallery.
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: _takePicture,
-                        icon: const Icon(Icons.camera_alt),
-                        label: const Text('Take Photo'),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: _pickImage,
-                        icon: const Icon(Icons.photo_library),
-                        label: const Text('Select from Library'),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -153,6 +180,15 @@ class DisplayPictureScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Display Picture')),
       body: Center(child: Image.file(File(imagePath))),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewTransactionScreen()),
+          );
+        },
+        child: Icon(Icons.check),
+      ),
     );
   }
 }

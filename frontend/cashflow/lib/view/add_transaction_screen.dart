@@ -160,7 +160,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                       child: Text(
                         _selectedDate == null
                             ? 'No Date Chosen!'
-                            : 'Date: ${_selectedDate!.toLocal()}'.split(' ')[0],
+                            : 'Date: ${_selectedDate!.toLocal().toString().split(' ')[0]}',
                       ),
                     ),
                     TextButton(
@@ -207,7 +207,13 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                         items: categories.map((Category category) {
                           return DropdownMenuItem<Category>(
                             value: category,
-                            child: Text(category.name),
+                            child: Row(
+                              children: [
+                                Icon(category.icon, color: category.color),
+                                SizedBox(width: 8.0),
+                                Text(category.name),
+                              ],
+                            ),
                           );
                         }).toList(),
                         onChanged: (Category? newValue) {

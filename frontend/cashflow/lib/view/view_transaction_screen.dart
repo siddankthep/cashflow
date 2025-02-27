@@ -1,5 +1,6 @@
 import 'package:cashflow/model/providers/auth_provider.dart';
 import 'package:cashflow/model/services/transaction_service.dart';
+import 'package:cashflow/view/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +33,8 @@ class ViewTransactionScreen extends StatelessWidget {
                   ),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  leading: Icon(Icons.circle, color: Colors.blue),
+                  leading: Icon(snapshot.data?[index].getCategory?.icon,
+                      color: snapshot.data?[index].getCategory?.color),
                   title: Text(
                     snapshot.data?[index].getCategory?.name ?? 'No category',
                     style: TextStyle(
@@ -59,6 +61,15 @@ class ViewTransactionScreen extends StatelessWidget {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewTransactionScreen()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

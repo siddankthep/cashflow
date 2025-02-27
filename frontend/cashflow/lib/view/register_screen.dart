@@ -130,11 +130,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               .then((success) {
                             if (success) {
                               // Navigate on successful login
-                              Navigator.push(
-                                context,
+                              // Navigate on successful login
+                              Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),
-                                ),
+                                    builder: (context) => LoginScreen()),
+                                (Route<dynamic> route) => false,
                               );
                             }
                           }).catchError((error) {
