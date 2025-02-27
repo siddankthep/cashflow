@@ -1,7 +1,7 @@
 import 'package:cashflow/model/providers/camera_provider.dart';
 import 'package:cashflow/model/services/user_service.dart';
 import 'package:cashflow/view/scan_receipt_screen.dart';
-import 'package:cashflow/view/view_transaction_screen.dart';
+import 'package:cashflow/view/view_all_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ViewTransactionScreen()));
+                      builder: (context) => ViewAllTransactionScreen()));
               print('Viewing transactions');
             },
             // child: Text('Scan Receipt', textAlign: TextAlign.center),

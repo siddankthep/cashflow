@@ -13,8 +13,8 @@ class UserService {
     final response = await http.get(
       Uri.parse(baseUrl),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ${token}',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
       },
     );
 
@@ -24,7 +24,7 @@ class UserService {
     print('User: ${response.body}');
     if (status == 200) {
       print("Successfully retrieved transactions");
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
       return User.fromJson(body);
     } else if (status == 403) {
       throw Exception('Invalid credentials');

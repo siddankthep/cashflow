@@ -9,7 +9,7 @@ class AuthenticationService {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'username': username,
@@ -21,7 +21,7 @@ class AuthenticationService {
     print('Status Code: $status');
     if (status == 200) {
       print("Logged in successfully!");
-      return jsonDecode(response.body)['token'];
+      return jsonDecode(utf8.decode(response.bodyBytes))['token'];
     } else if (status == 403) {
       throw Exception('Invalid credentials');
     } else {
@@ -34,7 +34,7 @@ class AuthenticationService {
     final response = await http.post(
       Uri.parse('$baseUrl/signup'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'firstName': firstName,

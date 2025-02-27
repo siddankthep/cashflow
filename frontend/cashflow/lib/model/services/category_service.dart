@@ -9,7 +9,7 @@ class CategoryService {
     final response = await http.get(
       Uri.parse('$baseUrl/'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
@@ -21,7 +21,7 @@ class CategoryService {
     if (status == 200) {
       print("Successfully retrieved transactions");
 
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
       List<Category> categories = [];
       for (var item in body) {
         categories.add(Category.fromJson(item));

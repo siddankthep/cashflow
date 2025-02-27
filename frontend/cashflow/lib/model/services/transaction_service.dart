@@ -13,7 +13,7 @@ class TransactionService {
     final response = await http.get(
       Uri.parse('$baseUrl/'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ${authProvider.jwtToken}',
       },
     );
@@ -24,7 +24,7 @@ class TransactionService {
     print('Response: ${response.body}');
     if (status == 200) {
       print("Successfully retrieved transactions");
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
       List<Transaction> transactions = [];
       for (var item in body) {
         transactions.add(Transaction.fromJson(item));
@@ -42,7 +42,7 @@ class TransactionService {
     final response = await http.post(
       Uri.parse('$baseUrl/save'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode(transaction.toJson()),
