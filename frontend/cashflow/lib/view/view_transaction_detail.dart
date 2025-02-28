@@ -8,9 +8,9 @@ class ViewTransactionDetailScreen extends StatelessWidget {
   final Transaction transaction;
 
   const ViewTransactionDetailScreen({
-    Key? key,
+    super.key,
     required this.transaction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -132,61 +132,61 @@ class ViewTransactionDetailScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Edit and Delete buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Navigate to edit transaction screen
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   builder: (context) => EditTransactionScreen(transaction: transaction)
-                    // ));
-                  },
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Edit'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                  ),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    // Show confirmation dialog
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: const Text('Delete Transaction'),
-                        content: const Text(
-                            'Are you sure you want to delete this transaction?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Delete the transaction
-                              // TransactionService().deleteTransaction(transaction.id);
-                              Navigator.of(ctx).pop();
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Delete',
-                                style: TextStyle(color: Colors.red)),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  label:
-                      const Text('Delete', style: TextStyle(color: Colors.red)),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     ElevatedButton.icon(
+            //       onPressed: () {
+            //         // Navigate to edit transaction screen
+            //         // Navigator.push(context, MaterialPageRoute(
+            //         //   builder: (context) => EditTransactionScreen(transaction: transaction)
+            //         // ));
+            //       },
+            //       icon: const Icon(Icons.edit),
+            //       label: const Text('Edit'),
+            //       style: ElevatedButton.styleFrom(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 24, vertical: 12),
+            //       ),
+            //     ),
+            //     OutlinedButton.icon(
+            //       onPressed: () {
+            //         // Show confirmation dialog
+            //         showDialog(
+            //           context: context,
+            //           builder: (ctx) => AlertDialog(
+            //             title: const Text('Delete Transaction'),
+            //             content: const Text(
+            //                 'Are you sure you want to delete this transaction?'),
+            //             actions: [
+            //               TextButton(
+            //                 onPressed: () => Navigator.of(ctx).pop(),
+            //                 child: const Text('Cancel'),
+            //               ),
+            //               TextButton(
+            //                 onPressed: () {
+            //                   // Delete the transaction
+            //                   // TransactionService().deleteTransaction(transaction.id);
+            //                   Navigator.of(ctx).pop();
+            //                   Navigator.of(context).pop();
+            //                 },
+            //                 child: const Text('Delete',
+            //                     style: TextStyle(color: Colors.red)),
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       },
+            //       icon: const Icon(Icons.delete, color: Colors.red),
+            //       label:
+            //           const Text('Delete', style: TextStyle(color: Colors.red)),
+            //       style: OutlinedButton.styleFrom(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 24, vertical: 12),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),

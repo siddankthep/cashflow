@@ -68,29 +68,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_authController.formKey.currentState!.validate()) {
                           _authController.formKey.currentState!
                               .save(); // Save the form FIRST
 
-                          _authController
-                              .login(context, _username, _password)
-                              .then((_) {
-                            // Navigate on successful login
-                            Navigator.of(context).pushAndRemoveUntil(
+                          try {
+                            // Wait for login completion
+                            await _authController.login(
+                                context, _username, _password);
+                            // Only navigate if login succeeds (no exception was thrown)
+                            // Navigator.of(context).pushAndRemoveUntil(
+                            //   MaterialPageRoute(
+                            //       builder: (context) => HomeScreen()),
+                            //   (Route<dynamic> route) => false,
+                            // );
+                            Navigator.push(
+                              context,
                               MaterialPageRoute(
                                   builder: (context) => HomeScreen()),
-                              (Route<dynamic> route) => false,
                             );
-                          }).catchError((error) {
-                            // Handle login errors here, e.g., show a snackbar
+                          } catch (error) {
+                            // This will only execute if login fails
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${error.toString()}'),
+                                content: Text(error.toString()),
                                 backgroundColor: Colors.red,
                               ),
                             );
-                          });
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

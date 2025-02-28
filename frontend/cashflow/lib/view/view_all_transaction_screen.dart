@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class ViewAllTransactionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AuthProvider _authProvider =
+    final AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
@@ -59,7 +59,7 @@ class ViewAllTransactionScreen extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
-                          '${snapshot.data![index].getSubtotal.toString()} ${_authProvider.user?.getCurrency}',
+                          '${snapshot.data![index].getSubtotal.toString()} ${authProvider.user?.getCurrency}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[600],

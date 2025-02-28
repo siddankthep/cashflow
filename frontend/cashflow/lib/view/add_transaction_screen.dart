@@ -11,9 +11,9 @@ class NewTransactionScreen extends StatefulWidget {
   final Transaction? scannedTransaction;
 
   const NewTransactionScreen({
-    Key? key,
+    super.key,
     this.scannedTransaction,
-  }) : super(key: key);
+  });
 
   @override
   _NewTransactionScreenState createState() => _NewTransactionScreenState();

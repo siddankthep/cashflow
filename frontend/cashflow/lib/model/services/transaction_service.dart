@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class TransactionService {
-  final String baseUrl = 'http://10.0.2.2:8080/transactions';
+  // final String baseUrl = 'http://10.0.2.2:8080/transactions';
+  final String baseUrl = 'http://10.212.3.131:8080/transactions';
 
   Future<List<Transaction>> getAllTransaction(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

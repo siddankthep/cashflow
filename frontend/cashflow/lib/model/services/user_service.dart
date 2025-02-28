@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class UserService {
-  final String baseUrl = 'http://10.0.2.2:8080/users/me';
+  // final String baseUrl = 'http://10.0.2.2:8080/users/me';
+  final String baseUrl = 'http://10.212.3.131:8080/users/me';
 
   Future<User> getUser(BuildContext context, String token) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

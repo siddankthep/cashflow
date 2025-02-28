@@ -3,7 +3,8 @@ import 'package:cashflow/entities/category.dart';
 import 'package:http/http.dart' as http;
 
 class CategoryService {
-  final String baseUrl = 'http://10.0.2.2:8080/categories';
+  // final String baseUrl = 'http://10.0.2.2:8080/categories';
+  final String baseUrl = 'http://10.212.3.131:8080/categories';
 
   Future<List<Category>> getAllCategories(String? token) async {
     final response = await http.get(

@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class OCRService {
-  final String baseUrl = 'http://10.0.2.2:8080/ocr';
+  // final String baseUrl = 'http://10.0.2.2:8080/ocr';
+  final String baseUrl = 'http://10.212.3.131:8080/ocr';
 
   Future<Transaction> scanReceipt(String photoPath, String bearerToken) async {
     final url = Uri.parse('$baseUrl/scan');
@@ -27,9 +28,12 @@ class OCRService {
         final Transaction transaction = Transaction.fromJson(data);
         print('Finished converting from JSON to Transaction');
         return transaction;
+      } else if (response.statusCode == 400) {
+        print('Upload failed with status: ${response.statusCode}');
+        throw Exception('Failed to scan receipt');
       } else {
         print('Upload failed with status: ${response.statusCode}');
-        throw Exception('Failed to upload photo');
+        throw Exception('An error occurred while scanning the receipt');
       }
     } catch (e) {
       print('Error sending photo: $e');

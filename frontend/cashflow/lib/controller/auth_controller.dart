@@ -27,14 +27,7 @@ class AuthController {
       return;
     } catch (error) {
       // Catch any errors here
-      print("Login failed: $error");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toString()),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
+      rethrow;
     }
   }
 

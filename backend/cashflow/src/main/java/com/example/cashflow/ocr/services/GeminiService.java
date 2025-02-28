@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.cashflow.entities.Category;
-import com.example.cashflow.ocr.dto.*;
 import com.example.cashflow.ocr.dto.gemini.Content;
 import com.example.cashflow.ocr.dto.gemini.GeminiGenerateContentRequest;
 import com.example.cashflow.ocr.dto.gemini.GeminiGenerateContentResponse;
@@ -24,8 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -55,15 +55,31 @@ public class GeminiService {
       }
       """;;
   private final String summarizePrompt = """
-      Sau đây là 1 danh sách các sản phẩm bạn đã mua trong 1 hóa đơn. Nhiệm vụ của bạn là tóm tắt nội dung hóa đơn này và trả về các thông tin siêu dữ liệu của hóa đơn đó bao gồm tổng giá trị hóa đơn, ngày mua hàng, phương thức thanh toán và địa điểm mua hàng.
+      Here is a list of products you purchased in a receipt received from an OCR scanner. Your task is to summarize the content of this receipt and return the metadata of that receipt including the total value of the receipt, the date of purchase, the payment method, and the location of purchase.
+      The fields in the JSON response should be:
+      - description: A description of the receipt
+      - subtotal: The total value of the receipt
+      - date: The date of purchase in the format YYYY-MM-DD
+      - paymentMethod: The payment method used. Can be either cash, credit card, or mobile payment
+      - location: The location of the purchase
 
-      Hãy trả kết quả theo format JSON với dạng sau:
+
+      Here is an example of the expected output. The output should be in Vietnamese.:
       {
         "description": "Hóa đơn này được lập tại quán ăn Thiện Tân, bao gồm các món ăn như bún, mì, cơm, sườn, hủ tiếu, tôm lăn bột và nước uống (Pepsi, trà đá). Tổng cộng có 10 món ăn và 10 ly nước được đặt",
           "subtotal": 537000,
           "date": "2022-10-10",
           "paymentMethod": "Tiền mặt",
           "location": "Quán ăn Thiện Tân, 47-19 Tôn Đản, Phường 13, Quận 4, TP.HCM"
+      }
+
+      Sometimes, the receipt OCR scan may return gibberish (due to the image not being clear or the OCR engine not being able to recognize the text). In this case, you can return the following response with null in every field:
+      {
+        "description": null,
+          "subtotal": null,
+          "date": null,
+          "paymentMethod": null,
+          "location": null
       }
       """;
 
@@ -119,9 +135,24 @@ public class GeminiService {
 
       // Extract "text" field from response
       String textJsonString = response.getCandidates().get(0).getContent().getParts().get(0).getText();
+      logger.info("Gemini API response: {}", textJsonString);
 
       // Convert extracted string into JSON object
-      return objectMapper.readTree(textJsonString);
+      JsonNode jsonResponse = objectMapper.readTree(textJsonString);
+
+      // Check if all fields are null
+      boolean allFieldsNull = true;
+      Iterator<Map.Entry<String, JsonNode>> fields = jsonResponse.fields();
+      while (fields.hasNext()) {
+        Map.Entry<String, JsonNode> field = fields.next();
+        if (!field.getValue().isNull()) {
+          allFieldsNull = false;
+          break;
+        }
+      }
+
+      // Return null if all fields are null, otherwise return the JSON response
+      return allFieldsNull ? null : jsonResponse;
     } catch (Exception e) {
       throw new RuntimeException("Error occurred while calling Gemini API", e);
     }

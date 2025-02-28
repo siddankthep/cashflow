@@ -2,6 +2,9 @@ package com.example.cashflow.ocr.services;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,17 +29,17 @@ import java.util.UUID;
 @Service
 public class OCRService {
 
-    private final TransactionRepository transactionRepository;
+    private static final Logger logger = LoggerFactory.getLogger(GeminiService.class);
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final GeminiService geminiService;
     private final String UPLOAD_DIRECTORY = "/home/sid/Sid/2.Spring_2025/SWE/Projects/cashflow/receipt-images";
     private final String TESSDATA_PATH = "/usr/share/tesseract-ocr/5/tessdata/";
 
-    public OCRService(GeminiService geminiService, TransactionRepository transactionRepository,
-            CategoryRepository categoryRepository, UserRepository userRepository) {
+    public OCRService(GeminiService geminiService,
+            CategoryRepository categoryRepository,
+            UserRepository userRepository) {
         this.geminiService = geminiService;
-        this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
     }
@@ -46,8 +49,14 @@ public class OCRService {
 
         String filePath = storeImage(image);
         String ocrResult = performOcr(filePath);
+        logger.info("OCR Result: " + ocrResult);
+        logger.info("OCR Result Length: " + ocrResult.length());
 
+        if (ocrResult.length() < 1) {
+            throw new IllegalArgumentException("Failed to dectect information from receipt");
+        }
         JsonNode categoryResponse = geminiService.categorizeReceipt(ocrResult, userId);
+
         UUID categoryId = UUID.fromString(categoryResponse.get("id").asText());
 
         Category category = categoryRepository.findById(categoryId)
@@ -57,20 +66,16 @@ public class OCRService {
 
         JsonNode metadata = geminiService.summarizeReceipt(ocrResult);
 
+        if (metadata == null) {
+            throw new IllegalArgumentException("Failed to detect information from receipt");
+        }
+
         String description = metadata.get("description").asText();
         BigDecimal subtotal = new BigDecimal(metadata.get("subtotal").asDouble());
         LocalDate date = LocalDate.parse(metadata.get("date").asText());
         String paymentMethod = metadata.get("paymentMethod").asText();
         String location = metadata.get("location").asText();
 
-        // TransactionResponse response = new TransactionResponse(
-        // userId,
-        // category,
-        // subtotal,
-        // description,
-        // date,
-        // paymentMethod,
-        // location);
         Transaction transaction = new Transaction(
                 user,
                 category,
@@ -80,7 +85,6 @@ public class OCRService {
                 paymentMethod,
                 location);
 
-        // return response;
         return transaction;
     }
 
@@ -114,23 +118,4 @@ public class OCRService {
         return fileName.substring(dotIndex + 1);
     }
 
-    // public static void main(String[] args) {
-    // String imagePath = "/home/sid/Downloads/hoa-don1.jpg";
-    // try {
-    // File file = new File("/home/sid/Downloads/hoa-don1.jpg");
-    // FileInputStream input = new FileInputStream(file);
-    // MultipartFile multipartFile = new MockMultipartFile("file", file.getName(),
-    // "image/jpeg", input);
-
-    // // Now you can use the multipartFile object as needed
-    // // For example, you can pass it to the processReceipt method of OCRService
-    // OCRService ocrService = new OCRService(/* dependencies */);
-    // // UUID userId = UUID.randomUUID(); // Replace with actual userId
-    // // ocrService.processReceipt(multipartFile, userId);
-    // ocrService/performOcr(imagePath);
-
-    // } catch (TesseractException e) {
-    // e.printStackTrace();
-    // }
-    // }
 }

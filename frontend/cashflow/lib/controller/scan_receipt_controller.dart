@@ -18,8 +18,8 @@ class ScanReceiptController {
       // return image.path;
     } catch (e) {
       print('Error capturing image: $e');
+      rethrow;
     }
-    return null;
   }
 
   /// Picks an image from the gallery and scans it using the OCR service.
@@ -33,6 +33,7 @@ class ScanReceiptController {
       }
     } catch (e) {
       print('Error picking or scanning image: $e');
+      rethrow;
     }
     return null;
   }
