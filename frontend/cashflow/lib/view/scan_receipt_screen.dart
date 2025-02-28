@@ -30,7 +30,7 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
     super.initState();
     _controller = CameraController(
       widget.camera,
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
     );
     _initializeControllerFuture = _controller.initialize();
     _scanController = ScanReceiptController();
@@ -63,7 +63,13 @@ class ScanReceiptScreenState extends State<ScanReceiptScreen> {
       print('Error picking image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('An error occurred while scanning the receipt'),
+          content: Text(
+              'An error occurred while scanning the receipt. Please enter the details manually.'),
+        ),
+      );
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => NewTransactionScreen(),
         ),
       );
     } finally {
