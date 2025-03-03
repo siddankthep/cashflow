@@ -4,10 +4,20 @@ import 'package:http/http.dart' as http;
 import 'package:cashflow/model/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TransactionService {
-  // final String baseUrl = 'http://10.0.2.2:8080/transactions';
-  final String baseUrl = 'http://10.212.3.131:8080/transactions';
+  final String baseUrl;
+
+  // Constructor that takes the baseUrl
+  TransactionService({required this.baseUrl});
+
+  // Factory constructor that loads the URL from environment variables
+  factory TransactionService.fromEnv() {
+    return TransactionService(
+      baseUrl: '${dotenv.env['API_BASE_URL']}/transactions',
+    );
+  }
 
   Future<List<Transaction>> getAllTransaction(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

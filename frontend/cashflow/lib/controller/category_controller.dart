@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cashflow/model/services/category_service.dart';
 
 class CategoryController {
-  CategoryService _categoryService = CategoryService();
+  CategoryService _categoryService = CategoryService.fromEnv();
 
   /// Converts a hex string (with or without a leading "#") into a Color.
   /// If the hex string doesn't include an alpha value, it assumes full opacity.

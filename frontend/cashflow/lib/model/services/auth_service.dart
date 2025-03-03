@@ -1,12 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthenticationService {
-  // final String baseUrl = 'http://localhost:8080/auth';
-  // final String baseUrl = 'http://10.0.2.2:8080/auth';
-  final String baseUrl = 'http://10.212.3.131:8080/auth';
+  final String baseUrl;
+
+  // Constructor that takes the baseUrl
+  AuthenticationService({required this.baseUrl});
+
+  // Factory constructor that loads the URL from environment variables
+  factory AuthenticationService.fromEnv() {
+    return AuthenticationService(
+      baseUrl: '${dotenv.env['API_BASE_URL']}/auth',
+    );
+  }
 
   Future<String> login(String username, String password) async {
+    print('API URL: $baseUrl');
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: <String, String>{

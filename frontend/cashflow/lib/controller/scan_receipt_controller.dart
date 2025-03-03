@@ -13,7 +13,7 @@ class ScanReceiptController {
       // Assumes the controller is already initialized.
       final image = await controller.takePicture();
       Transaction transaction =
-          await OCRService().scanReceipt(image.path, token);
+          await OCRService.fromEnv().scanReceipt(image.path, token);
       return transaction;
       // return image.path;
     } catch (e) {
@@ -28,7 +28,7 @@ class ScanReceiptController {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         Transaction transaction =
-            await OCRService().scanReceipt(image.path, token);
+            await OCRService.fromEnv().scanReceipt(image.path, token);
         return transaction;
       }
     } catch (e) {

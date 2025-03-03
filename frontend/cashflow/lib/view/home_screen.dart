@@ -11,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  UserService userService = UserService();
+  UserService userService = UserService.fromEnv();
 
   @override
   Widget build(BuildContext context) {

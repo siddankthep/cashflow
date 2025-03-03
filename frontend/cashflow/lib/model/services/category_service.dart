@@ -1,10 +1,20 @@
 import 'dart:convert';
 import 'package:cashflow/entities/category.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CategoryService {
-  // final String baseUrl = 'http://10.0.2.2:8080/categories';
-  final String baseUrl = 'http://10.212.3.131:8080/categories';
+  final String baseUrl;
+
+  // Constructor that takes the baseUrl
+  CategoryService({required this.baseUrl});
+
+  // Factory constructor that loads the URL from environment variables
+  factory CategoryService.fromEnv() {
+    return CategoryService(
+      baseUrl: '${dotenv.env['API_BASE_URL']}/categories',
+    );
+  }
 
   Future<List<Category>> getAllCategories(String? token) async {
     final response = await http.get(

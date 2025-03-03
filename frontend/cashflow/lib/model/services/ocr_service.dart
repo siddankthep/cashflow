@@ -1,10 +1,21 @@
 import 'package:cashflow/entities/transaction.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class OCRService {
-  // final String baseUrl = 'http://10.0.2.2:8080/ocr';
-  final String baseUrl = 'http://10.212.3.131:8080/ocr';
+  final String baseUrl;
+
+  // Constructor that takes the baseUrl
+  OCRService({required this.baseUrl});
+
+  // Factory constructor that loads the URL from environment variables
+  factory OCRService.fromEnv() {
+    return OCRService(
+      baseUrl: '${dotenv.env['API_BASE_URL']}/ocr',
+    );
+  }
 
   Future<Transaction> scanReceipt(String photoPath, String bearerToken) async {
     final url = Uri.parse('$baseUrl/scan');

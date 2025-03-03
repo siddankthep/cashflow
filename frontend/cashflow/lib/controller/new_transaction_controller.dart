@@ -4,8 +4,8 @@ import 'package:cashflow/model/services/category_service.dart';
 import 'package:cashflow/model/services/transaction_service.dart';
 
 class NewTransactionController {
-  final TransactionService _transactionService = TransactionService();
-  final CategoryService _categoryService = CategoryService();
+  final TransactionService _transactionService = TransactionService.fromEnv();
+  final CategoryService _categoryService = CategoryService.fromEnv();
 
   /// Fetches all categories using the CategoryService.
   Future<List<Category>> fetchCategories(String? token) async {

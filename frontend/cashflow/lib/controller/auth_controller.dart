@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 
 class AuthController {
   final _formKey = GlobalKey<FormState>();
-  AuthenticationService _authService = AuthenticationService();
-  UserService _userService = UserService();
+  AuthenticationService _authService = AuthenticationService.fromEnv();
+  UserService _userService = UserService.fromEnv();
 
   // Handle login submission
   Future<void> login(context, String username, String password) async {
