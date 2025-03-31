@@ -14,14 +14,17 @@ Future<void> main() async {
   // Existing initialization code
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  final firstCamera = cameras.first;
+  CameraDescription? firstCamera;
+  if (cameras.isNotEmpty) {
+    firstCamera = cameras.first;
+  }
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(
-            create: (_) => CameraProvider()..setFirstCamera(firstCamera)),
+            create: (_) => CameraProvider()..setFirstCamera(firstCamera!)),
       ],
       child: MyApp(),
     ),

@@ -83,6 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             //       builder: (context) => HomeScreen()),
                             //   (Route<dynamic> route) => false,
                             // );
+                            _authController.formKey.currentState!.reset();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

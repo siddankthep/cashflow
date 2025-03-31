@@ -67,7 +67,7 @@ public class GeminiService {
       Here is an example of the expected output. The output should be in Vietnamese.:
       {
         "description": "Hóa đơn này được lập tại quán ăn Thiện Tân, bao gồm các món ăn như bún, mì, cơm, sườn, hủ tiếu, tôm lăn bột và nước uống (Pepsi, trà đá). Tổng cộng có 10 món ăn và 10 ly nước được đặt",
-          "subtotal": 537000,
+          "subtotal": 537000, 
           "date": "2022-10-10",
           "paymentMethod": "Tiền mặt",
           "location": "Quán ăn Thiện Tân, 47-19 Tôn Đản, Phường 13, Quận 4, TP.HCM"
