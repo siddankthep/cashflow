@@ -1,0 +1,47 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches: [frontend]
+  pull_request:
+    branches: [frontend]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: deployment/Dockerfile.frontend
+          push: true
+          tags: siddankthep/cashflow-frontend:latest
+
+      - name: Deploy frontend to EC2
+        env:
+          EC2_IP: ${{ secrets.AWS_EC2_IP }}
+          EC2_USER: ${{ secrets.AWS_SSH_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+        run: |
+          echo "$SSH_KEY" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP << 'EOF'
+            docker stop cashflow-frontend || true
+            docker rm cashflow-frontend || true
+            docker pull siddankthep/cashflow-frontend:latest
+            docker run -d -p 80:8080 --env-file cashflow/frontend/.env --name cashflow-frontend siddankthep/cashflow-frontend:latest
+          EOF
+          rm key.pem

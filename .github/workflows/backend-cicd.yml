@@ -1,0 +1,47 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ backend ]
+  pull_request:
+    branches: [ backend ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: deployment/Dockerfile.backend
+          push: true
+          tags: siddankthep/cashflow-backend:latest
+
+      - name: Deploy backend to EC2
+        env:
+          EC2_IP: ${{ secrets.AWS_EC2_IP }}
+          EC2_USER: ${{ secrets.AWS_SSH_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+        run: |
+          echo "$SSH_KEY" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP << 'EOF'
+            docker stop cashflow-backend || true
+            docker rm cashflow-backend || true
+            docker pull siddankthep/cashflow-backend:latest
+            docker run -d -p 8080:8080 --env-file cashflow/backend/.env --name cashflow-backend siddankthep/cashflow-backend:latest
+          EOF
+          rm key.pem
