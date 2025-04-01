@@ -42,6 +42,6 @@ jobs:
             docker stop cashflow-backend || true
             docker rm cashflow-backend || true
             docker pull siddankthep/cashflow-backend:latest
-            docker run -d -p 8080:8080 --env-file cashflow/backend/.env --name cashflow-backend siddankthep/cashflow-backend:latest
+            docker run -d -p 8080:8080 -v /home/ubuntu/cashflow/receipt-images:/app/receipt-images --env-file cashflow/backend/.env --name cashflow-backend siddankthep/cashflow-backend:latest
           EOF
           rm key.pem
