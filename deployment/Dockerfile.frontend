@@ -46,7 +46,7 @@ RUN ls -la /app
 WORKDIR /app
 
 RUN flutter pub get
-RUN flutter build apk --release --no-tree-shake-icons
+RUN flutter build apk --release --no-tree-shake-icons --stacktrace --debug
 
 # Stage 2: Runtime with HTTP server
 FROM ubuntu:20.04
