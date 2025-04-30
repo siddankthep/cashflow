@@ -20,12 +20,24 @@ public class CategoryService {
     }
 
     public List<Category> getAllCategories(UUID userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
         List<Category> categories = new ArrayList<>();
         categoryRepository.findAllByUserId(userId).forEach(categories::add);
         return categories;
     }
 
     public Category saveCategory(CategoryDTO input, User user) {
+        if (input == null) {
+            throw new IllegalArgumentException("Category input cannot be null");
+        }
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if (input.getName() == null || input.getName().isEmpty()) {
+            throw new IllegalArgumentException("Category name cannot be empty");
+        }
         Category category = new Category(
                 user,
                 input.getName(),
