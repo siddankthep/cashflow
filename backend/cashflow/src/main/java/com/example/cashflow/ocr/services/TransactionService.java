@@ -1,5 +1,7 @@
 package com.example.cashflow.ocr.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +43,20 @@ public class TransactionService {
         CategoryResponse categoryResponse = input.getCategory();
         Category category = categoryRepository.findByName(categoryResponse.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        // Validate the user
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        // Validate the transaction date
+        if (input.getTransactionDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Transaction date cannot be in the future");
+        }
+
+        // Validate the subtotal
+        if (input.getSubtotal().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Subtotal must be positive");
+        }
         Transaction newTransaction = new Transaction(
                 user,
                 category,
