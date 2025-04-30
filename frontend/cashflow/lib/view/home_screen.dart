@@ -1,6 +1,7 @@
 import 'package:cashflow/model/providers/camera_provider.dart';
 import 'package:cashflow/model/services/user_service.dart';
 import 'package:cashflow/view/scan_receipt_screen.dart';
+import 'package:cashflow/view/spending_by_category_screen.dart';
 import 'package:cashflow/view/view_all_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,41 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(200, 150),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SpendingByCategoryScreen()));
+              print('Analyzing transactions!');
+            },
+            // child: Text('Scan Receipt', textAlign: TextAlign.center),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Spending Analysis",
+                  textAlign: TextAlign.center,
+                  textScaler: TextScaler.linear(1),
+                ),
+                SizedBox(
+                  height: 10,
+                  width: 10,
+                ),
+                Icon(Icons.analytics_outlined),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 20,
+            height: 20,
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               fixedSize: Size(200, 150),
@@ -91,6 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icon(Icons.list),
               ],
             ),
+          ),
+          SizedBox(
+            width: 20,
+            height: 20,
           ),
         ],
       )),
