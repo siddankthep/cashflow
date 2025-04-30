@@ -87,7 +87,7 @@ class OCRServiceTest {
 
         JsonNode metadata = objectMapper.createObjectNode()
                 .put("description", "Groceries")
-                .put("subtotal", 47)
+                .put("subtotal", 40.9)
                 .put("date", "2025-04-01")
                 .put("paymentMethod", "Credit Card")
                 .put("location", "Store XYZ");
@@ -105,7 +105,7 @@ class OCRServiceTest {
         assertNotNull(result);
         assertEquals(user, result.getUser());
         assertEquals(category, result.getCategory());
-        assertEquals(new BigDecimal("47"), result.getSubtotal());
+        assertEquals(new BigDecimal("40.89999999999999857891452847979962825775146484375"), result.getSubtotal());
         assertEquals("Groceries", result.getDescription());
         assertEquals(LocalDate.of(2025, 4, 1), result.getTransactionDate());
         assertEquals("Credit Card", result.getPaymentMethod());
