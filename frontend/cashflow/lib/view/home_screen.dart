@@ -2,6 +2,7 @@ import 'package:cashflow/entities/user.dart';
 import 'package:cashflow/model/providers/auth_provider.dart';
 import 'package:cashflow/model/providers/camera_provider.dart';
 import 'package:cashflow/model/services/user_service.dart';
+import 'package:cashflow/view/add_transaction_screen.dart';
 import 'package:cashflow/view/scan_receipt_screen.dart';
 import 'package:cashflow/view/spending_by_category_screen.dart';
 import 'package:cashflow/view/view_all_transaction_screen.dart';
@@ -255,6 +256,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewTransactionScreen()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
