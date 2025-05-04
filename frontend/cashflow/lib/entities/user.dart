@@ -6,6 +6,7 @@ class User {
   final String firstName;
   final String lastName;
   final String preferredCurrency;
+  final double balance;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,11 +18,13 @@ class User {
     required this.firstName,
     required this.lastName,
     this.preferredCurrency = "VND",
+    required this.balance,
     required this.createdAt,
     required this.updatedAt,
   });
 
   String get getCurrency => preferredCurrency;
+  double get getBalance => balance;
 
   /// Creates a [User] instance from a JSON map.
   factory User.fromJson(Map<String, dynamic> json) {
@@ -33,6 +36,7 @@ class User {
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       preferredCurrency: json['preferredCurrency'] as String? ?? "VND",
+      balance: (json['balance'] as num).toDouble(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -48,6 +52,7 @@ class User {
       "firstName": firstName,
       "lastName": lastName,
       "preferredCurrency": preferredCurrency,
+      "balance": balance,
       "createdAt": createdAt.toIso8601String(),
       "updatedAt": updatedAt.toIso8601String(),
     };
