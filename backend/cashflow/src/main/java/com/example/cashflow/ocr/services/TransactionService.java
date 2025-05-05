@@ -1,11 +1,16 @@
 package com.example.cashflow.ocr.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.example.cashflow.authentication.repositories.UserRepository;
 import com.example.cashflow.entities.Category;
 import com.example.cashflow.entities.Transaction;
 import com.example.cashflow.entities.User;
@@ -16,13 +21,16 @@ import com.example.cashflow.ocr.responses.CategoryResponse;
 
 @Service
 public class TransactionService {
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public TransactionService(TransactionRepository transactionRepository,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository, UserRepository userRepository) {
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Transaction> getAllTransactions() {
@@ -41,6 +49,26 @@ public class TransactionService {
         CategoryResponse categoryResponse = input.getCategory();
         Category category = categoryRepository.findByName(categoryResponse.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        // Validate the user
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        // Validate the transaction date
+        if (input.getTransactionDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Transaction date cannot be in the future");
+        }
+
+        // Validate the subtotal
+        if (input.getSubtotal().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Subtotal must be positive");
+        }
+
+        BigDecimal newBalance = user.getBalance().subtract(input.getSubtotal());
+        user.setBalance(newBalance);
+        userRepository.save(user);
+        logger.info("New balance: " + newBalance);
+
         Transaction newTransaction = new Transaction(
                 user,
                 category,

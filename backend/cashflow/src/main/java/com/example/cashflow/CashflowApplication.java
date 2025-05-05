@@ -15,7 +15,7 @@ public class CashflowApplication {
 		SpringApplication.run(CashflowApplication.class, args);
 	}
 
-		@Bean
+	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
 
@@ -26,6 +26,8 @@ public class CashflowApplication {
 			for (String beanName : beanNames) {
 				System.out.println(beanName);
 			}
+
+			System.out.println("HE HE HE");
 
 		};
 	}
