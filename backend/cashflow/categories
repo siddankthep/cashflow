@@ -1,0 +1,71 @@
+\q
+show port;
+\dt
+\q
+\dt
+\q
+]dt
+\dt
+\q
+\dt
+\l
+\dt
+select * from users;
+select * from categories;
+\dt
+\q
+\dt
+\q
+select * from users;
+\q
+select * from users;
+select * from users;
+select * from users;
+\q
+select * from categories;
+\dt
+\dt
+select * from categories;
+\dt
+\dt
+INSERT INTO users (email, username, password_hash, first_name, last_name) VALUES
+    ('sid@admin.com', 'admin', 'password', 'Sid', 'Nguyen');
+\dt
+\dt
+\dt
+\l
+\dt
+\dt
+\dt
+\q
+\q
+\dt
+select * from categories;
+\q
+\dt
+select * from categories;
+\q
+select * from users;
+select * from transactions;
+select * from users;
+\q
+\dt
+select * from transactions;
+\q
+select * from users;
+\q
+select * from categories;
+select * from transactions;
+select * from transactions where user_id = '4703f07f-dcf4-42d5-a095-276c0b0609cf';
+select * from transactions where category_id = ;
+select * from transactions where category_id = '1668e79f-1822-4f20-b24e-5e446222f348';
+\q
+SELECT * FROM categories WHERE id = '73959ed9-bb73-4f8a-828f-dd4c8531c065';
+\dt
+\d categories
+\q
+\dt
+\d transactions
+\d categories
+select * from categories;
+\s categories;
