@@ -43,4 +43,32 @@ class UserService {
       throw Exception('Failed to login');
     }
   }
+
+  Future<User> updateUserBalance(
+      BuildContext context, String token, double balance) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String balanceUrl = '${baseUrl}/update_balance';
+    final response = await http.post(
+      Uri.parse(balanceUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: balance.toString(),
+    );
+
+    int status = response.statusCode;
+    print('Status Code: $status');
+    print('Token: ${authProvider.jwtToken}');
+    print('User: ${response.body}');
+    if (status == 200) {
+      print("Successfully updated user balance");
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
+      return User.fromJson(body);
+    } else if (status == 403) {
+      throw Exception('Invalid credentials');
+    } else {
+      throw Exception('Failed to update user balance');
+    }
+  }
 }

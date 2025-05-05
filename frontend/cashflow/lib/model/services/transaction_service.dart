@@ -19,7 +19,7 @@ class TransactionService {
     );
   }
 
-  Future<List<Transaction>> getAllTransaction(BuildContext context) async {
+  Future<List<Transaction>> getAllTransactions(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final response = await http.get(
       Uri.parse('$baseUrl/'),

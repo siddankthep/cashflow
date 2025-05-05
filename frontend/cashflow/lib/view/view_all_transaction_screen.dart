@@ -16,7 +16,7 @@ class ViewAllTransactionScreen extends StatelessWidget {
         title: Text('Transactions'),
       ),
       body: FutureBuilder(
-        future: TransactionService.fromEnv().getAllTransaction(context),
+        future: TransactionService.fromEnv().getAllTransactions(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
