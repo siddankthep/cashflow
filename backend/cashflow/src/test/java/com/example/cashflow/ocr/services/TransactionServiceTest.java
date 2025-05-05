@@ -1,6 +1,5 @@
 package com.example.cashflow.ocr.services;
 
-import com.example.cashflow.authentication.repositories.UserRepository;
 import com.example.cashflow.entities.Category;
 import com.example.cashflow.entities.Transaction;
 import com.example.cashflow.entities.User;
@@ -31,9 +30,6 @@ public class TransactionServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @InjectMocks
     private TransactionService transactionService;
