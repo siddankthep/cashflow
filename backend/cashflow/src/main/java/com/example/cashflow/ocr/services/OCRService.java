@@ -85,11 +85,6 @@ public class OCRService {
         String paymentMethod = metadata.get("paymentMethod").asText();
         String location = metadata.get("location").asText();
 
-        BigDecimal newBalance = user.getBalance().subtract(subtotal);
-        user.setBalance(newBalance);
-        userRepository.save(user);
-        logger.info("New balance: " + newBalance);
-
         return new Transaction(user, category, subtotal, description, date, paymentMethod, location);
     }
 
